@@ -13,14 +13,16 @@ struct EmojiMemoryGameView: View {
         HStack {
             ForEach(viewModel.cards) { card in
                 CardView(card: card)
+                    .aspectRatio(0.5, contentMode: .fit)
                     .onTapGesture {
                         self.viewModel.choose(card: card)
                 }
             }
         }
-            .foregroundColor(Color.green)
+        .foregroundColor(Color.green)
             .padding()
-            .font(Font.largeTitle)
+//            .font(Font.largeTitle)
+//            .edgesIgnoringSafeArea([.top, .bottom])
 
     }
 }
@@ -28,16 +30,30 @@ struct EmojiMemoryGameView: View {
 struct CardView: View {
     var card: MemoryGame<String>.Card
     var body: some View {
-        ZStack {
-            if card.isFaceUp {
-            RoundedRectangle(cornerRadius: 10.0).fill(Color.white)
-            RoundedRectangle(cornerRadius: 10.0).stroke(lineWidth: 3)
-                Text(card.content)
-            } else {
-                RoundedRectangle(cornerRadius: 10.0).fill()
-            }
+        GeometryReader { geometry in
+            self.body(for: geometry.size)
         }
     }
+    
+    func body(for size: CGSize) -> some View {
+        ZStack {
+            if self.card.isFaceUp {
+            RoundedRectangle(cornerRadius: conerRadius).fill(Color.white)
+            RoundedRectangle(cornerRadius: conerRadius).stroke(lineWidth: edgeLineWidth)
+                Text(self.card.content)
+                
+            } else {
+                RoundedRectangle(cornerRadius: conerRadius).fill()
+            }
+        }
+        .font(Font.system(size: min(size.width, size.height) * fontScaleFactor))
+    }
+    
+    // MARK: - Drawing Constants
+    let conerRadius: CGFloat = 10.0
+    let edgeLineWidth: CGFloat = 3
+    let fontScaleFactor: CGFloat = 0.75
+    let cardsAspectRatio: CGFloat = 2
 }
 
 struct ContentView_Previews: PreviewProvider {
