@@ -13,10 +13,11 @@ struct EmojiMemoryGameView: View {
     var body: some View {
         Grid(items: viewModel.cards) { card in
                 CardView(card: card)
-                    .aspectRatio(0.5, contentMode: .fit)
+                    //.aspectRatio(0.5, contentMode: .fit)
                     .onTapGesture {
                         self.viewModel.choose(card: card)
                 }
+        .padding(5)
         }
         .foregroundColor(Color.green)
         .padding()
